@@ -14,6 +14,7 @@ import {
   type PlayerSkillData,
 } from "./rl/index.js";
 import logger from "./session-logger.js";
+import { VersionConfiguration } from "./rl/versionconfig.js";
 
 async function initializeAuth() {
   const auth = new EOSAuth();
@@ -55,10 +56,12 @@ async function initializeAuth() {
 }
 
 const CREDENTIAL_FILE = path.join(process.cwd(), "./saved-credentials.json");
-const { port, password } = loadConfig();
+const { port, password, rlVersion } = loadConfig();
+console.log({ rlVersion });
 
 const auth = await initializeAuth();
-const rocketLeague = new RocketLeague(auth);
+const versioning = new VersionConfiguration(rlVersion);
+const rocketLeague = new RocketLeague(auth, versioning);
 
 const app = new Hono();
 app.get("/", (c) =>

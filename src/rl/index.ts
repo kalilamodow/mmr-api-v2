@@ -1,9 +1,9 @@
 import { WebSocket } from "ws";
 import type { EOSAuth } from "../egs-auth/index.js";
-import { BUILD_ID } from "./constants.js";
 import { loginToPsynet } from "./psynetauth.js";
 import { generatePsySig } from "./psysig.js";
 import logger from "../session-logger.js";
+import type { VersionConfiguration } from "./versionconfig.js";
 
 type TimeoutId = ReturnType<typeof setTimeout>;
 function parseHttpResponse(raw: string) {
@@ -84,15 +84,17 @@ export class RocketLeague {
   private autoDisconnectTimeout: TimeoutId | null;
   private requestId: number;
   private auth: EOSAuth;
+  private versioning: VersionConfiguration;
 
   private handlers: {
     requestId: number;
     handler: (data: any) => void;
   }[];
 
-  constructor(auth: EOSAuth) {
+  constructor(auth: EOSAuth, versioning: VersionConfiguration) {
     this.socket = null;
     this.auth = auth;
+    this.versioning = versioning;
     this.autoDisconnectTimeout = null;
     this.handlers = [];
     this.requestId = 1;
@@ -158,12 +160,12 @@ export class RocketLeague {
       return this.currentActivationPromise;
 
     this.currentActivationPromise = (async () => {
-      const psynet = await loginToPsynet(credentials);
+      const psynet = await loginToPsynet(credentials, this.versioning);
       this.socket = new WebSocket(psynet.PerConURLv2, {
         headers: {
           PsyToken: psynet.PsyToken,
           PsySessionID: psynet.SessionID,
-          PsyBuildID: BUILD_ID,
+          PsyBuildID: this.versioning.get().buildId,
           PsyEnvironment: "Prod",
         },
       });

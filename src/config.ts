@@ -1,9 +1,11 @@
 import * as fs from "node:fs";
 import path from "node:path";
+import type { VersionConfigData } from "./rl/versionconfig.js";
 
 type Configuration = {
   password: string;
   port: number;
+  rlVersion: VersionConfigData;
 };
 
 const DEFAULT_PORT = 3000;
@@ -28,5 +30,11 @@ export function loadConfig(): Configuration {
   return {
     password: getOrThrow(existingConfig, "password"),
     port: existingConfig.port || DEFAULT_PORT,
+    rlVersion: getOrThrow(existingConfig, "rlVersion"),
   };
+}
+
+export function updateConfiguration(configuration: Configuration) {
+  const configPath = path.join(process.cwd(), "./config.json");
+  fs.writeFileSync(configPath, JSON.stringify(configuration));
 }

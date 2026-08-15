@@ -1,7 +1,7 @@
 import type { EOSAuth } from "../egs-auth/index.js";
 import logger from "../session-logger.js";
-import * as c from "./constants.js";
 import { generatePsySig } from "./psysig.js";
+import type { VersionConfiguration } from "./versionconfig.js";
 
 export type PsynetAuth = {
   IsLastChanceAuthBan: boolean;
@@ -13,7 +13,10 @@ export type PsynetAuth = {
   PsyToken: string;
 };
 
-export async function loginToPsynet(auth: EOSAuth): Promise<PsynetAuth> {
+export async function loginToPsynet(
+  auth: EOSAuth,
+  versioning: VersionConfiguration,
+): Promise<PsynetAuth> {
   const credentials = auth.get();
   const body = {
     Platform: "Epic",
@@ -22,7 +25,7 @@ export async function loginToPsynet(auth: EOSAuth): Promise<PsynetAuth> {
     Language: "INT",
     AuthTicket: credentials.accessToken,
     BuildRegion: "",
-    FeatureSet: c.FEATURE_SET,
+    FeatureSet: versioning.get().featureSet,
     Device: "PC",
     bSkipAuth: false,
     bSetAsPrimaryAccount: true,
@@ -37,7 +40,7 @@ export async function loginToPsynet(auth: EOSAuth): Promise<PsynetAuth> {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        PsyBuildID: c.BUILD_ID,
+        PsyBuildID: versioning.get().buildId,
         PsyRequestID: "PsyNetMessage_X_1",
         PsySig: generatePsySig(JSON.stringify(body)),
         PsyEnvironment: "Prod",
@@ -59,7 +62,7 @@ export async function loginToPsynet(auth: EOSAuth): Promise<PsynetAuth> {
   if (json.Error.Type === "ThirdPartyError") {
     logger.log("loginToPsynet", "got third party error. refreshing.", "warn");
     auth.refresh();
-    return loginToPsynet(auth);
+    return loginToPsynet(auth, versioning);
   }
 
   logger.log("loginToPsynet", "psynet error:" + JSON.stringify(json), "error");
