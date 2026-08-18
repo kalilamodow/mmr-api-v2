@@ -1,7 +1,9 @@
 # mmr-api-v2
 
 This is an api that talks to Rocket League's own websocket API to provide an
-http interface for skill data (mmrs, ranks) and profile data.
+http interface for skill data (mmrs, ranks) and profile data. It was made to
+provide [rlbuddy](https://github.com/kalilamodow/rlbuddy) with an interface to
+talk to psynet without having to deal with client-side authentication.
 
 It is written in javascript with Node to be used as a webserver.
 
