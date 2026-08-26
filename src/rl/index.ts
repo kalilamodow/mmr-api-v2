@@ -10,7 +10,7 @@ function parseHttpResponse(raw: string) {
   const sepMatch = raw.match(/\r?\n\r?\n/);
 
   if (!sepMatch) {
-    throw "invalid http response";
+    throw new Error("invalid http response");
   }
 
   const separatorIndex = sepMatch.index!;
