@@ -2,6 +2,7 @@
 export type VersionConfigData = {
   featureSet: string;
   buildId: string;
+  buildSecret: string;
 };
 
 export class VersionConfiguration {

@@ -46,6 +46,7 @@ export async function loginToPsynet(
         PsyEnvironment: "Prod",
         "User-Agent":
           "RL Win/260602.75104.519749 gzip (x86_64-pc-win32) curl-7.67.0 Schannel",
+        PsyBuildSecret: versioning.get().buildSecret,
       },
       body: JSON.stringify(body),
     },
