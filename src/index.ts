@@ -151,6 +151,7 @@ app.get("/get-skills", async (c) => {
     const skill = await rocketLeague.getPlayerSkill(playerId);
     return c.json(skillResponse(skill));
   } catch (error) {
+    console.error(error);
     return c.json({ error: (error as Error).message });
   }
 });
@@ -175,6 +176,7 @@ app.get("/get-profile", async (c) => {
     const profile = await rocketLeague.getPlayerProfile(playerId);
     return c.json(profileResponse(profile));
   } catch (error) {
+    console.error(error);
     return c.json({ error: (error as Error).message });
   }
 });
@@ -200,6 +202,7 @@ app.get("/player-id-to-epic-name", async (c) => {
 
     return c.json({ name: foundPlayer.EpicPlayerName });
   } catch (error) {
+    console.error(error);
     return c.json({ error: (error as Error).message });
   }
 });
