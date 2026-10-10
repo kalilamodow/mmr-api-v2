@@ -5,18 +5,20 @@ http interface for skill data (mmrs, ranks) and profile data. It was made to
 provide [rlbuddy](https://github.com/kalilamodow/rlbuddy) with an interface to
 talk to psynet without having to deal with client-side authentication.
 
-It is written in javascript with Node to be used as a webserver.
+It is written in javascript with Bun to be used as a webserver.
 
 ## setup
 
-Run `npm build`, and create a config.json in the project root. The `password`
+Run `bun run build`, and create a config.json in the project root. The `password`
 field is required, and the `port` field is optional (defaults to 3000). You can
-run it with `node dist/index.js` then.
+run it with `bun run dist/index.js` then.
 
 To authenticate to rocket league servers, go to `/bootstrap?pw={password}`.
 This will give you a link which you can open in your own device that's signed
 in to the target account to authorize. Note: you should use an alt account
 because rocket league only allows one connection at a time per account.
+
+You can run the development server with `bun run dev`.
 
 ## routes
 
