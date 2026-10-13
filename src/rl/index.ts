@@ -131,7 +131,7 @@ export class RocketLeague {
   }
 
   private async send<T>(auth: EOSAuth, service: string, body: string) {
-    if (this.socket === null) {
+    if (this.socket === null || this.socket.readyState !== WebSocket.OPEN) {
       await this.activate(auth);
     }
 
