@@ -60,8 +60,15 @@ export async function loginToPsynet(
     return json.Result;
   }
 
-  if (json.Error.Type === "ThirdPartyError") {
-    logger.log("loginToPsynet", "got third party error. refreshing.", "warn");
+  if (
+    json.Error.Type === "ThirdPartyError" ||
+    json.Error.Type === "AccessDenied"
+  ) {
+    logger.log(
+      "loginToPsynet",
+      `got refreshable error (${json.Error.Type}). refreshing.`,
+      "warn",
+    );
     auth.refresh();
     return loginToPsynet(auth, versioning);
   }
